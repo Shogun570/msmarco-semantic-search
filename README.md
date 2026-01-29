@@ -12,3 +12,4 @@ Dense retrieval baseline with sentence transformers + FAISS.
 3. Run All (5min)
 
 ## Demo Output
+<img width="1134" height="499" alt="image" src="https://github.com/user-attachments/assets/c323b6c3-d676-4872-9337-75f6f8d5adea" />
