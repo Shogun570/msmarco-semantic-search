@@ -1,0 +1,8 @@
+ir-datasets>=0.5.6
+sentence-transformers>=2.2.2
+faiss-cpu>=1.7.4
+ranx>=1.19.0
+pandas
+numpy
+tqdm
+torch>=2.0.0
