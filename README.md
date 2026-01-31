@@ -14,7 +14,7 @@ Dense retrieval baseline with sentence transformers and FAISS.
 ## Local run
 ```bash
 # 1. Clone
-git clone https://github.com/YOURUSERNAME/msmarco-semantic-search.git
+git clone https://github.com/shogun570/msmarco-semantic-search.git
 cd msmarco-semantic-search
 
 # 2. Install (2min)
