@@ -11,8 +11,7 @@ Dense retrieval baseline with sentence transformers and FAISS.
 2. T4 GPU 
 3. Run All (5min)
 
-## 🖥️ Local Demo (Any Machine)
-
+## Local run
 ```bash
 # 1. Clone
 git clone https://github.com/YOURUSERNAME/msmarco-semantic-search.git
