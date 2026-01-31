@@ -27,45 +27,47 @@ torch.cuda.manual_seed(SEED)
 print(f"✅ Seeds set: {SEED}")
 
 def load_data():
-    """Load MS MARCO corpus + qrels (auto-downloads)"""
-    print("🚀 Loading MS MARCO (50k passages)...")
+    """Load MS MARCO data with UTF-8 fix"""
+    print("Loading MS MARCO data...")
     
-    # Create local data dir
-    os.makedirs('msmarco_data', exist_ok=True)
+    dataset = ir_datasets.load("msmarco-passage/train")
     
-    # Check if data exists locally
-    data_path = 'msmarco_data/data.pkl'
-    if os.path.exists(data_path):
-        print("Loading cached data...")
-        with open(data_path, 'rb') as f:
-            return pickle.load(f)
+    # Fix 1: UTF-8 encoding fix (ir_datasets handles this automatically in recent versions)
+    corpus = {}
+    count = 0
+    for doc in tqdm(islice(dataset.docs_iter(), 50000), total=50000, desc="Loading docs"):
+        try:
+            corpus[doc.doc_id] = doc.text
+            count += 1
+        except UnicodeDecodeError:
+            # Skip broken docs (rare)
+            continue
     
-    # Corpus sample (50k passages)
-    dataset = ir_datasets.load("msmarco-passage")
-    corpus = {doc.doc_id: doc.text for doc in islice(dataset.docs_iter(), 50000)}
-    print(f"Corpus: {len(corpus)} passages")
+    print(f"✅ Loaded {count}/50K docs")
     
-    # Train qrels
-    train_ds = ir_datasets.load("msmarco-passage/train")
+    # Queries
+    queries = {q.query_id: q.text for q in dataset.queries_iter()}
+    
+    # Train qrels (positive pairs for fine-tuning)
     train_qrels = defaultdict(set)
-    for qrel in train_ds.qrels_iter():
+    for qrel in dataset.qrels_iter():
         train_qrels[qrel.query_id].add(qrel.doc_id)
     
-    # Dev qrels
-    dev_ds = ir_datasets.load("msmarco-passage/dev")
+    # Dev qrels (for evaluation)
+    dataset_dev = ir_datasets.load("msmarco-passage/dev")
     dev_qrels = defaultdict(set)
-    for qrel in dev_ds.qrels_iter():
+    for qrel in dataset_dev.qrels_iter():
         dev_qrels[qrel.query_id].add(qrel.doc_id)
     
-    print(f"Train qrels: {len(train_qrels)} | Dev: {len(dev_qrels)}")
+    print(f"✅ Train qrels: {len(train_qrels)} queries")
+    print(f"✅ Dev qrels: {len(dev_qrels)} queries")
     
-    # Save locally
-    data = {'corpus': corpus, 'train_qrels': dict(train_qrels), 'dev_qrels': dict(dev_qrels)}
-    with open(data_path, 'wb') as f:
-        pickle.dump(data, f)
-    print("✅ Data saved locally!")
-    
-    return data
+    return {
+        'corpus': corpus,
+        'queries': queries, 
+        'train_qrels': train_qrels,
+        'dev_qrels': dev_qrels
+    }
 
 def build_index():
     """Build FAISS index from corpus"""
