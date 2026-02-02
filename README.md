@@ -2,7 +2,7 @@
 
 **Dense Retrieval Implementation**
 
-[![Status](https://img.shields.io/badge/Status-✅%20Complete-green)]() [![Python](https://img.shields.io/badge/Python-3.8%2B-blue)]() [![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-orange)]()
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue)]() [![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-orange)]()
 
 ##  **Project Structure**
 msmarco-semantic-search/
