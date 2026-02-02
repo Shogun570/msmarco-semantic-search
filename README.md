@@ -12,11 +12,14 @@
 setx PYTHONUTF8 1
 ```
 ### **2. Installation and running**
-```
+```bash
+# 1. Clone
 git clone https://github.com/shogun570/msmarco-semantic-search.git
 cd msmarco-semantic-search
 
+# 2. Install (2min)
 pip install -r requirements.txt
-python 01_baseline.py  
-python 02_finetuning.py
+
+# 3. Run (5min first time)
+python msmarco_semanticsearch_1.py
 ```
