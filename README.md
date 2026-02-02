@@ -4,19 +4,8 @@
 
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue)]() [![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-orange)]()
 
-##  **Project Structure**
-msmarco-semantic-search/
-├── 01_baseline.py
-├── 02_finetuning.py
-├── requirements.txt # Dependencies
-├── README.md # This file
-└── msmarco_data/ # Generated (gitignored)
-├── baseline_model/
-├── finetuned_model/
-├── data.pkl
-└── faiss.index
 
-## 🚀 **Quick Start (Windows)**
+## *Quick Start (Windows)*
 
 ### **1. Fix Windows UTF-8 (Admin CMD - ONCE)**
 ```cmd
