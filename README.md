@@ -1,4 +1,4 @@
-# MS MARCO Semantic Search Baseline 🚀
+# MS MARCO Semantic Search
 
 **Dense Retrieval Implementation**
 
@@ -13,7 +13,10 @@ setx PYTHONUTF8 1
 ```
 ### **2. Installation and running**
 ```
+git clone https://github.com/shogun570/msmarco-semantic-search.git
+cd msmarco-semantic-search
+
 pip install -r requirements.txt
-python 01_baseline.py    # ~5min → MRR@10: 0.22
-python 02_finetuning.py  # ~15min → MRR@10: 0.30
+python 01_baseline.py  
+python 02_finetuning.py
 ```
