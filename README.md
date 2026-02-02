@@ -21,5 +21,5 @@ cd msmarco-semantic-search
 pip install -r requirements.txt
 
 # 3. Run (5min first time)
-python msmarco_semanticsearch_1.py
+python 01_baseline.py
 ```
