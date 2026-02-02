@@ -1,28 +1,46 @@
-# msmarco-semantic-search
-MS MARCO Semantic Search Engine. Dense retrieval with sentence transformers + FAISS
-[![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1kt518UTNkSIyXES5gs-cd3HEnQ7AbhUA?usp=sharing)
+#!/usr/bin/env python3
+"""
+MS MARCO Dense Retrieval Baseline - 33/110pts
+SentenceTransformer + FAISS on real MS MARCO data
 
+Run: pip install -r requirements.txt && python 01_baseline.py
+"""
 
+import os
+import ir_datasets
+import torch
+import numpy as np
+import pickle
+from collections import defaultdict
+from itertools import islice
+from sentence_transformers import SentenceTransformer
+import faiss
+from tqdm import tqdm
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
 
-Dense retrieval baseline with sentence transformers and FAISS.
+# Windows UTF-8 fix
+os.environ['PYTHONUTF8'] = '1'
 
-## Quickstart
-1. Click Colab badge
-2. T4 GPU 
-3. Run All (5min)
-
-## Local run
-```bash
-# 1. Clone
-git clone https://github.com/shogun570/msmarco-semantic-search.git
-cd msmarco-semantic-search
-
-# 2. Install (2min)
-pip install -r requirements.txt
-
-# 3. Run (5min first time)
-python msmarco_semanticsearch_1.py
-```
-
-## Demo Output
-<img width="1134" height="499" alt="image" src="https://github.com/user-attachments/assets/c323b6c3-d676-4872-9337-75f6f8d5adea" />
+def load_data():
+    """Load real MS MARCO passage data (UTF-8 safe)"""
+    print("🔄 Loading MS MARCO passage data...")
+    
+    # Use DEV subset first (guaranteed clean)
+    dataset = ir_datasets.load("msmarco-passage/dev")
+    
+    # Load corpus (20K docs for speed)
+    corpus = {}
+    for doc in tqdm(islice(dataset.docs_iter(), 20000), total=20000, desc="Docs"):
+        corpus[doc.doc_id] = doc.text
+    
+    # Load queries
+    queries = {q.query_id: q.text for q in dataset.queries_iter()}
+    
+    # Load qrels
+    train_qrels = defaultdict(set)
+    dev_qrels = defaultdict(set)
+    
+    # Dev qrels
+    for qrel in dataset.qrels_iter():
+        dev_qrels[qrel.query_id]
