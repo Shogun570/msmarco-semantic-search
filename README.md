@@ -22,4 +22,6 @@ pip install -r requirements.txt
 
 # 3. Run (5min first time)
 python 01_baseline.py
+python 02_finetuning.py
+python 03_evaluation.py
 ```
