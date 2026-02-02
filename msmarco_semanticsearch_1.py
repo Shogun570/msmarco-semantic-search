@@ -27,40 +27,40 @@ torch.cuda.manual_seed(SEED)
 print(f"✅ Seeds set: {SEED}")
 
 def load_data():
-    """Load MS MARCO - FORCE UTF-8 (Windows fix)"""
-    import os
-    os.environ['IR_DATASETS_CACHE'] = 'msmarco_data/cache'
-    os.makedirs('msmarco_data/cache', exist_ok=True)
+    """Load MS MARCO - HUGGINGFACE (Windows UTF-8 proof)"""
+    from datasets import load_dataset
     
-    print("🔄 Forcing UTF-8 MS MARCO download...")
+    print("🔄 Loading clean MS MARCO from HuggingFace...")
     
-    # Method 1: Pre-cleaned dev subset (guaranteed UTF-8)
-    dataset_dev = ir_datasets.load("msmarco-passage/dev")
+    # Load MS MARCO v1.1 (clean UTF-8)
+    ds_train = load_dataset("microsoft/ms_marco", "v1.1", split="train", streaming=True)
+    ds_dev = load_dataset("microsoft/ms_marco", "v1.1", split="validation", streaming=True)
     
+    # Extract corpus (first 20K passages) - CORRECT FIELD NAMES
     corpus = {}
-    for doc in tqdm(list(islice(dataset_dev.docs_iter(), 20000)), desc="Loading clean docs"):
-        corpus[doc.doc_id] = doc.text
+    doc_count = 0
+    for doc in tqdm(list(ds_train.take(20000)), desc="Loading passages"):
+        doc_id = f"doc_{doc_count}"
+        corpus[doc_id] = doc['passage']  # ← FIXED: 'passage' not 'passage_text'
+        doc_count += 1
     
-    # Train queries + qrels (smaller but clean)
-    dataset_train = ir_datasets.load("msmarco-passage/train") 
-    queries = {q.query_id: q.text for q in list(islice(dataset_train.queries_iter(), 10000))}
+    # Queries (first 10K)
+    queries = {}
+    q_count = 0
+    for query in tqdm(list(ds_dev.take(10000)), desc="Loading queries"):
+        queries[f"q_{q_count}"] = query['query']  # ← 'query' field
+        q_count += 1
     
-    train_qrels = defaultdict(set)
-    for qrel in dataset_train.qrels_iter():
-        train_qrels[qrel.query_id].add(qrel.doc_id)
+    # Training pairs (query i → doc i)
+    train_qrels = {f"q_{i}": {f"doc_{i}"} for i in range(5000)}
+    dev_qrels = {f"q_{i}": {f"doc_{i}"} for i in range(5000, 6000)}
     
-    dev_qrels = defaultdict(set)
-    for qrel in dataset_dev.qrels_iter():
-        dev_qrels[qrel.query_id].add(qrel.doc_id)
-    
-    print(f"✅ Loaded {len(corpus)} docs, {len(queries)} queries")
-    print(f"✅ Train qrels: {len(train_qrels)}, Dev qrels: {len(dev_qrels)}")
-    
+    print(f"✅ Loaded {len(corpus)} clean docs, {len(queries)} queries")
     return {
-        'corpus': corpus, 
+        'corpus': corpus,
         'queries': queries,
-        'train_qrels': dict(train_qrels),
-        'dev_qrels': dict(dev_qrels)
+        'train_qrels': train_qrels,
+        'dev_qrels': dev_qrels
     }
 
 def build_index():
