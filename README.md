@@ -24,4 +24,12 @@ pip install -r requirements.txt
 python 01_baseline.py
 python 02_finetuning.py
 python 03_evaluation.py
+python 04_iteration.py
 ```
+
+### Failure/Edge cases
+03_evaluation often does not reflect the same MRR as reported by 01_baseline. It also sometimes reports ∆=0 for one or more parameters after fine tuning. Due to time constraints for this project I couldn't figure out why.
+
+Nevertheless I quickly learnt the basis for these models learn, MRR scores, FAISS indexing, BM25 retrieval and much more!
+
+Made with ❤️ in BPHC
