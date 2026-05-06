@@ -4,10 +4,10 @@
 
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue)]() [![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-orange)]()
 
-
+did this as a club induction task for the ML team of my college's IEEE Student Chapter :3 
 ## *Quick Start (Windows)*
 
-### **1. Fix Windows UTF-8 (Admin CMD - ONCE)**
+### **1. Fix Windows UTF-8 (Admin CMD)**
 ```cmd
 setx PYTHONUTF8 1
 ```
